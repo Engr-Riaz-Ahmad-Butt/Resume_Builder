@@ -3,7 +3,7 @@ import * as pg from "drizzle-orm/pg-core";
 
 import { type StoredResumeAnalysis } from "../../schema/resume/analysis.js";
 import { defaultResumeData, type ResumeData } from "../../schema/resume/data.js";
-import { generateId } from "../../lib/id.js";
+import { generateId } from "../../utils/string.js";
 import { lower } from "./helpers.js";
 
 export const user = pg.pgTable(

@@ -12,6 +12,7 @@ export const env = createEnv({
     LOG_LEVEL: z.string().optional(),
     DATABASE_URL: z.url({ protocol: /postgres(ql)?/ }),
     REDIS_URL: z.url({ protocol: /rediss?/ }),
+    AUTH_SECRET: z.string().min(1),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
