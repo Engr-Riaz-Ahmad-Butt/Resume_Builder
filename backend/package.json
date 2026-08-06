@@ -32,6 +32,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1104.0",
     "@better-auth/api-key": "^1.6.9",
     "@better-auth/drizzle-adapter": "^1.6.9",
     "@better-auth/infra": "^0.2.5",
@@ -64,6 +65,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.2.8",
     "react-email": "^6.9.1",
+    "sharp": "^0.34.5",
     "ts-pattern": "^5.9.0",
     "unique-names-generator": "^4.7.1",
     "uuid": "^11.1.0",
@@ -76,6 +78,7 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.2.4",
+    "@types/sharp": "^0.32.0",
     "drizzle-kit": "1.0.0-beta.22",
     "oxlint": "^1.6.0",
     "prettier": "^3.6.2",
