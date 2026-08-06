@@ -31,6 +31,9 @@ importers:
       '@orpc/client':
         specifier: ^1.14.0
         version: 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/experimental-ratelimit':
+        specifier: ^1.14.14
+        version: 1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)
       '@orpc/server':
         specifier: ^1.14.14
         version: 1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)
@@ -58,6 +61,12 @@ importers:
       drizzle-orm:
         specifier: 1.0.0-beta.22
         version: 1.0.0-beta.22(@opentelemetry/api@1.9.1)(@types/pg@8.20.4)(pg@8.22.0)(zod@4.4.3)
+      drizzle-zod:
+        specifier: 1.0.0-beta.14-a36c63d
+        version: 1.0.0-beta.14-a36c63d(drizzle-orm@1.0.0-beta.22(@opentelemetry/api@1.9.1)(@types/pg@8.20.4)(pg@8.22.0)(zod@4.4.3))(zod@4.4.3)
+      es-toolkit:
+        specifier: ^1.50.0
+        version: 1.50.0
       fast-json-patch:
         specifier: ^3.1.1
         version: 3.1.1
@@ -97,6 +106,9 @@ importers:
       react-email:
         specifier: ^6.9.1
         version: 6.9.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      ts-pattern:
+        specifier: ^5.9.0
+        version: 5.9.0
       unique-names-generator:
         specifier: ^4.7.1
         version: 4.7.1
@@ -10395,6 +10407,18 @@ snapshots:
     dependencies:
       '@orpc/client': 1.14.14(@opentelemetry/api@1.9.1)
       '@orpc/server': 1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.11.22))(ws@8.21.2)
+      '@orpc/shared': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server': 1.14.14(@opentelemetry/api@1.9.1)
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - crossws
+      - fastify
+      - ws
+
+  '@orpc/experimental-ratelimit@1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)':
+    dependencies:
+      '@orpc/client': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/server': 1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)
       '@orpc/shared': 1.14.14(@opentelemetry/api@1.9.1)
       '@orpc/standard-server': 1.14.14(@opentelemetry/api@1.9.1)
     transitivePeerDependencies:

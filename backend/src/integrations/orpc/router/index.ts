@@ -1,18 +1,19 @@
 import { protectedProcedure, publicProcedure } from "../context";
+import { resumeRouter } from "./resume";
 
 /**
- * AppRouter shell (M06). Domain routers (resume, storage, …) are added in later modules.
+ * AppRouter — domain routers accumulate across modules.
+ * FLAG(M07): jsonb read-path validation is a follow-up (see EXTRACTION_NOTES).
  */
 const router = {
   auth: {
-    /** Public smoke procedure */
     ping: publicProcedure.handler(async () => ({ ok: true as const })),
-    /** Protected procedure — unauthenticated calls must yield UNAUTHORIZED */
     me: protectedProcedure.handler(async ({ context }) => ({
       id: context.user.id,
       email: context.user.email,
     })),
   },
+  resume: resumeRouter,
 };
 
 export default router;
