@@ -437,6 +437,16 @@ export const oauthConsent = pg.pgTable(
   (t) => [pg.index().on(t.userId, t.clientId)],
 );
 
+export const queuePing = pg.pgTable("queue_ping", {
+  id: pg
+    .uuid("id")
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => generateId()),
+  message: pg.text("message").notNull(),
+  createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const relations = defineRelations(
   {
     user,
