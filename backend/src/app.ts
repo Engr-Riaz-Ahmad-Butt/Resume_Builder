@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 
 import type { RequestIdVariables } from "./middleware/request-id.js";
+import { corsMiddleware } from "./middleware/cors.js";
 import { requestIdMiddleware } from "./middleware/request-id.js";
 import { securityHeadersMiddleware } from "./middleware/security-headers.js";
 import { authRoutes } from "./routes/auth.js";
@@ -13,6 +14,7 @@ import { uploadsRoutes } from "./routes/uploads.js";
  */
 export const app = new Hono<{ Variables: RequestIdVariables }>();
 
+app.use("*", corsMiddleware);
 app.use("*", requestIdMiddleware);
 app.use("*", securityHeadersMiddleware);
 app.route("/", healthRoutes);

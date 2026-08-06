@@ -1,4 +1,5 @@
-import type { JWTPayload } from "jose";
+import type { JSONWebKeySet, JWTPayload } from "jose";
+import { createLocalJWKSet, jwtVerify } from "jose";
 
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
@@ -8,7 +9,7 @@ import { passkey } from "@better-auth/passkey";
 import { APIError, BetterAuthError, betterAuth } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
 import { verifyAccessToken } from "better-auth/oauth2";
-import { admin, jwt, type GenericOAuthConfig } from "better-auth/plugins";
+import { admin, bearer, jwt, type GenericOAuthConfig } from "better-auth/plugins";
 import { genericOAuth } from "better-auth/plugins/generic-oauth";
 import { twoFactor } from "better-auth/plugins/two-factor";
 import { username } from "better-auth/plugins/username";
@@ -64,6 +65,10 @@ function getTrustedOrigins(): string[] {
   const normalizeOrigin = (origin: string): string => origin.replace(/\/$/, "");
   const appUrl = new URL(env.APP_URL);
   const trustedOrigins = new Set<string>([normalizeOrigin(appUrl.origin)]);
+  // FLAG(M09): auth consent / CORS origins come from FRONTEND_ORIGIN when set
+  if (env.FRONTEND_ORIGIN) {
+    trustedOrigins.add(normalizeOrigin(new URL(env.FRONTEND_ORIGIN).origin));
+  }
   const LOCAL_ORIGINS = ["localhost", "127.0.0.1"];
 
   if (LOCAL_ORIGINS.includes(appUrl.hostname)) {
@@ -384,6 +389,7 @@ const getAuthConfig = () => {
     },
 
     plugins: [
+      bearer(),
       jwt(),
       admin(),
       passkey(),
@@ -417,3 +423,22 @@ const getAuthConfig = () => {
 };
 
 export const auth = getAuthConfig();
+
+/**
+ * FLAG(M09): Dual Bearer paths —
+ * - verifyUserJwt: Better Auth JWT plugin tokens (FE↔BE user auth)
+ * - verifyOAuthToken: MCP OAuth access tokens (oauthProvider)
+ * Do not merge these verify paths.
+ */
+export async function verifyUserJwt(token: string): Promise<JWTPayload> {
+  const jwksResponse = await auth.handler(new Request(`${authBaseUrl}/api/auth/jwks`));
+  if (!jwksResponse.ok) {
+    throw new Error(`Failed to load JWKS: ${jwksResponse.status}`);
+  }
+  const jwks = (await jwksResponse.json()) as JSONWebKeySet;
+  const JWKS = createLocalJWKSet(jwks);
+  const { payload } = await jwtVerify(token, JWKS, {
+    issuer: authBaseUrl,
+  });
+  return payload;
+}
