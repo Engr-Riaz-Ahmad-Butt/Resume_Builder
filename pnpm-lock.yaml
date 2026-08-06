@@ -31,6 +31,9 @@ importers:
       '@orpc/client':
         specifier: ^1.14.0
         version: 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/server':
+        specifier: ^1.14.14
+        version: 1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)
       '@react-email/render':
         specifier: ^1.1.2
         version: 1.4.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -10457,6 +10460,26 @@ snapshots:
       cookie: 1.1.1
     optionalDependencies:
       crossws: 0.4.10(srvx@0.11.22)
+      ws: 8.21.2
+    transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - fastify
+
+  '@orpc/server@1.14.14(@opentelemetry/api@1.9.1)(crossws@0.4.10(srvx@0.12.5))(ws@8.21.2)':
+    dependencies:
+      '@orpc/client': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/contract': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/interop': 1.14.14
+      '@orpc/shared': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-aws-lambda': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-fastify': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-fetch': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-node': 1.14.14(@opentelemetry/api@1.9.1)
+      '@orpc/standard-server-peer': 1.14.14(@opentelemetry/api@1.9.1)
+      cookie: 1.1.1
+    optionalDependencies:
+      crossws: 0.4.10(srvx@0.12.5)
       ws: 8.21.2
     transitivePeerDependencies:
       - '@opentelemetry/api'
