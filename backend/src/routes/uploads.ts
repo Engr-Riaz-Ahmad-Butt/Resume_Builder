@@ -23,7 +23,7 @@ export const uploadsRoutes = new Hono().get("/uploads/:userId/*", async (c) => {
   if (!result) return c.json({ error: "Not Found" }, 404);
 
   const contentType = result.contentType ?? inferContentType(key);
-  return new Response(result.data, {
+  return new Response(Buffer.from(result.data), {
     status: 200,
     headers: {
       "Content-Type": contentType,

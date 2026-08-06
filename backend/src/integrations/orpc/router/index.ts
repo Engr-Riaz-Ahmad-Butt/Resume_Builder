@@ -1,5 +1,6 @@
 import { protectedProcedure, publicProcedure } from "../context";
 import { resumeRouter } from "./resume";
+import { printerRouter } from "./printer";
 import { storageRouter } from "./storage";
 
 /**
@@ -16,6 +17,7 @@ const router = {
   },
   resume: resumeRouter,
   storage: storageRouter,
+  printer: printerRouter,
 };
 
 export default router;

@@ -22,6 +22,8 @@ export default defineConfig({
       AUTH_SECRET: process.env.AUTH_SECRET ?? "test-auth-secret-for-vitest-only",
       APP_URL: process.env.APP_URL ?? "http://127.0.0.1:3001",
       FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN ?? "http://127.0.0.1:3000",
+      PRINTER_APP_URL: process.env.PRINTER_APP_URL ?? "http://127.0.0.1:3000",
+      PRINTER_ENDPOINT: process.env.PRINTER_ENDPOINT ?? "ws://127.0.0.1:4000?token=test",
     },
   },
 });

@@ -16,6 +16,10 @@ export const env = createEnv({
     APP_URL: z.url({ protocol: /https?/ }),
     // Prefer FRONTEND_ORIGIN for CORS/consent in M09; until then APP_URL doubles as origin.
     FRONTEND_ORIGIN: z.url({ protocol: /https?/ }).optional(),
+    // FLAG(M10): must be frontend origin serving /printer/$resumeId (not backend)
+    PRINTER_APP_URL: z.url({ protocol: /https?/ }).optional(),
+    PRINTER_ENDPOINT: z.url({ protocol: /^(wss?|https?)$/ }),
+    FLAG_DEBUG_PRINTER: z.stringbool().default(false),
 
     BETTER_AUTH_API_KEY: z.string().min(1).optional(),
 
