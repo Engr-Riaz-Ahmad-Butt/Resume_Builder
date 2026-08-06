@@ -1,5 +1,6 @@
 import { protectedProcedure, publicProcedure } from "../context";
 import { resumeRouter } from "./resume";
+import { storageRouter } from "./storage";
 
 /**
  * AppRouter — domain routers accumulate across modules.
@@ -14,6 +15,7 @@ const router = {
     })),
   },
   resume: resumeRouter,
+  storage: storageRouter,
 };
 
 export default router;

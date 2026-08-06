@@ -49,6 +49,13 @@ export const env = createEnv({
 
     FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
     FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
+    S3_ACCESS_KEY_ID: z.string().min(1).optional(),
+    S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+    S3_REGION: z.string().default("us-east-1"),
+    S3_ENDPOINT: z.url({ protocol: /https?/ }).optional(),
+    S3_BUCKET: z.string().min(1).optional(),
+    S3_FORCE_PATH_STYLE: z.stringbool().default(false),
+    FLAG_DISABLE_IMAGE_PROCESSING: z.stringbool().default(false),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
