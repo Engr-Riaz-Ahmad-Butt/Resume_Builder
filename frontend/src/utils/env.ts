@@ -72,6 +72,9 @@ export const env = createEnv({
     // Set to "false" for virtual-hosted-style URLs (bucket.endpoint), common with AWS S3, Cloudflare R2, etc.
     S3_FORCE_PATH_STYLE: z.stringbool().default(false),
 
+    // Backend service URL for internal server-to-server calls (e.g. video analysis)
+    BACKEND_URL: z.url({ protocol: /https?/ }).optional(),
+
     // Feature Flags
     FLAG_DEBUG_PRINTER: z.stringbool().default(false),
     FLAG_DISABLE_SIGNUPS: z.stringbool().default(false),
