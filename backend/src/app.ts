@@ -10,6 +10,7 @@ import { healthRoutes } from "./routes/health.js";
 import { uploadsRoutes } from "./routes/uploads.js";
 import { mcpRoutes } from "./routes/mcp.js";
 import { wellKnownRoutes } from "./routes/well-known.js";
+import { videoRoutes } from "./routes/video.js";
 
 /**
  * Exported Hono app (no listen). Used by the Node server and by tests via `app.request`.
@@ -25,6 +26,7 @@ app.route("/api/rpc", rpcRoutes);
 app.route("/", uploadsRoutes);
 app.route("/", wellKnownRoutes);
 app.route("/mcp", mcpRoutes);
+app.route("/", videoRoutes);
 
 app.notFound((c) => c.json({ error: "Not Found" }, 404));
 

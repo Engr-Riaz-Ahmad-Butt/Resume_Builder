@@ -61,6 +61,7 @@ export const env = createEnv({
     S3_BUCKET: z.string().min(1).optional(),
     S3_FORCE_PATH_STYLE: z.stringbool().default(false),
     FLAG_DISABLE_IMAGE_PROCESSING: z.stringbool().default(false),
+    GEMINI_API_KEY: z.string().min(1).optional(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
