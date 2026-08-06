@@ -43,6 +43,7 @@
     "@better-auth/oauth-provider": "^1.6.9",
     "@better-auth/passkey": "^1.6.9",
     "@hono/node-server": "^1.14.4",
+    "@modelcontextprotocol/sdk": "^1.30.0",
     "@orpc/client": "^1.14.0",
     "@orpc/experimental-ratelimit": "^1.14.14",
     "@orpc/server": "^1.14.14",

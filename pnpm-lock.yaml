@@ -43,6 +43,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.14.4
         version: 1.19.17(hono@4.13.0)
+      '@modelcontextprotocol/sdk':
+        specifier: ^1.30.0
+        version: 1.30.0(zod@4.4.3)
       '@orpc/client':
         specifier: ^1.14.0
         version: 1.14.14(@opentelemetry/api@1.9.1)
