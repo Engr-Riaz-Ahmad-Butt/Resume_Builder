@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 
 import type { Locale } from "@/utils/locale";
 
-import { auth, verifyOAuthToken } from "../auth/config";
+import { auth, verifyOAuthToken, verifyUserJwt } from "../auth/config";
 import { db } from "../drizzle/client";
 import { user } from "../drizzle/schema";
 
@@ -14,15 +14,29 @@ interface ORPCContext {
   reqHeaders?: Headers;
 }
 
+/**
+ * FLAG(M09): Dual Bearer verification —
+ * 1) User JWT (Better Auth jwt plugin) via verifyUserJwt
+ * 2) MCP OAuth access token via verifyOAuthToken
+ * Try user JWT first; fall back to MCP OAuth JWT.
+ */
 async function getUserFromBearerToken(headers: Headers): Promise<User | null> {
   try {
     const authHeader = headers.get("authorization");
     if (!authHeader?.startsWith("Bearer ")) return null;
+    const token = authHeader.slice(7);
 
-    const payload = await verifyOAuthToken(authHeader.slice(7));
-    if (!payload?.sub) return null;
+    let sub: string | undefined;
+    try {
+      const userPayload = await verifyUserJwt(token);
+      sub = typeof userPayload.sub === "string" ? userPayload.sub : undefined;
+    } catch {
+      const oauthPayload = await verifyOAuthToken(token);
+      sub = typeof oauthPayload.sub === "string" ? oauthPayload.sub : undefined;
+    }
 
-    const [userResult] = await db.select().from(user).where(eq(user.id, payload.sub)).limit(1);
+    if (!sub) return null;
+    const [userResult] = await db.select().from(user).where(eq(user.id, sub)).limit(1);
     return userResult ?? null;
   } catch (error) {
     console.warn("Bearer token verification failed:", error);

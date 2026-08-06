@@ -21,6 +21,7 @@ export default defineConfig({
       REDIS_URL: process.env.REDIS_URL ?? "redis://127.0.0.1:6380/15",
       AUTH_SECRET: process.env.AUTH_SECRET ?? "test-auth-secret-for-vitest-only",
       APP_URL: process.env.APP_URL ?? "http://127.0.0.1:3001",
+      FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN ?? "http://127.0.0.1:3000",
     },
   },
 });
