@@ -2,6 +2,12 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 
 import { app } from "@/app";
 import { closeDb } from "@/integrations/drizzle/client";
+import {
+  closePingQueueResources,
+  enqueuePing,
+  startPingWorker,
+  waitForPingJob,
+} from "@/integrations/queue/ping";
 import { closeRedis } from "@/lib/redis";
 import { resetDb } from "@/test/reset-db";
 import { resetRedis } from "@/test/reset-redis";
@@ -9,10 +15,10 @@ import { resetRedis } from "@/test/reset-redis";
 function uniqueUser() {
   const id = crypto.randomUUID().slice(0, 8);
   return {
-    name: `Jwt User ${id}`,
-    email: `jwt-${id}@example.com`,
+    name: `Queue User ${id}`,
+    email: `queue-${id}@example.com`,
     password: "Password123!",
-    username: `jwt_${id}`,
+    username: `queue_${id}`,
   };
 }
 
@@ -23,30 +29,28 @@ function cookieHeaderFromResponse(res: Response): string {
   return single ? single.split(",")[0]!.split(";")[0]! : "";
 }
 
-describe("JWT bearer + CORS", () => {
+describe("BullMQ ping queue", () => {
   beforeEach(async () => {
     await resetDb();
     await resetRedis();
   });
 
   afterAll(async () => {
+    await closePingQueueResources();
     await closeDb();
     await closeRedis();
   });
 
-  it("responds to CORS preflight from FRONTEND_ORIGIN", async () => {
-    const res = await app.request("/api/health", {
-      method: "OPTIONS",
-      headers: {
-        Origin: "http://127.0.0.1:3000",
-        "Access-Control-Request-Method": "GET",
-      },
-    });
-    expect(res.status).toBeLessThan(400);
-    expect(res.headers.get("access-control-allow-origin")).toBe("http://127.0.0.1:3000");
+  it("enqueue → worker → DB write", async () => {
+    startPingWorker();
+    const message = `ping-${crypto.randomUUID()}`;
+    const { jobId } = await enqueuePing(message);
+    const row = await waitForPingJob(jobId);
+    expect(row.message).toBe(message);
+    expect(row.id).toBeTruthy();
   });
 
-  it("login → JWT → authenticated oRPC me", async () => {
+  it("protected oRPC enqueuePing requires auth and enqueues", async () => {
     const user = uniqueUser();
     const signup = await app.request("/api/auth/sign-up/email", {
       method: "POST",
@@ -62,39 +66,29 @@ describe("JWT bearer + CORS", () => {
     });
     expect(login.status).toBeLessThan(400);
     const cookie = cookieHeaderFromResponse(login) || cookieHeaderFromResponse(signup);
-    expect(cookie).toBeTruthy();
 
-    // Obtain user JWT via session cookie → /api/auth/token (jwt plugin)
-    const sessionRes = await app.request("/api/auth/get-session", {
-      method: "GET",
-      headers: { cookie, accept: "application/json" },
+    const unauthorized = await app.request("/api/rpc/queue/enqueuePing", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ json: { message: "nope" } }),
     });
-    let jwt = sessionRes.headers.get("set-auth-jwt") || "";
+    expect(unauthorized.status).toBe(401);
 
-    if (!jwt) {
-      const tokenRes = await app.request("/api/auth/token", {
-        method: "GET",
-        headers: { cookie, accept: "application/json" },
-      });
-      expect(tokenRes.status).toBeLessThan(400);
-      const body = (await tokenRes.json()) as { token?: string };
-      jwt = body.token ?? "";
-    }
-
-    expect(jwt.length).toBeGreaterThan(10);
-
-    const me = await app.request("/api/rpc/auth/me", {
+    startPingWorker();
+    const message = `rpc-ping-${crypto.randomUUID()}`;
+    const res = await app.request("/api/rpc/queue/enqueuePing", {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        authorization: `Bearer ${jwt}`,
+        cookie,
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ json: { message } }),
     });
-
-    expect(me.status).toBe(200);
-    const body = (await me.json()) as { email?: string; json?: { email?: string } };
-    const email = body.email ?? body.json?.email;
-    expect(email).toBe(user.email);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { jobId?: string; json?: { jobId?: string } };
+    const jobId = body.jobId ?? body.json?.jobId;
+    expect(jobId).toBeTruthy();
+    const row = await waitForPingJob(jobId!);
+    expect(row.message).toBe(message);
   });
 });

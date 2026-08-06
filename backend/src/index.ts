@@ -6,8 +6,11 @@ import { serve } from "@hono/node-server";
 import { app } from "./app.js";
 import { logger } from "./lib/logger.js";
 import { registerSignalHandlers } from "./lib/shutdown.js";
+import { startPingWorker } from "./integrations/queue/ping.js";
 
 const port = Number(process.env.PORT ?? 3001);
+
+startPingWorker();
 
 const server = serve({ fetch: app.fetch, port }, (info) => {
   logger.info({ port: info.port }, "backend listening");

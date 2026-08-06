@@ -4,6 +4,7 @@ import { protectedProcedure, publicProcedure } from "../context";
 import { resumeRouter } from "./resume";
 import { printerRouter } from "./printer";
 import { storageRouter } from "./storage";
+import { queueRouter } from "./queue";
 
 /**
  * AppRouter — domain routers accumulate across modules.
@@ -22,6 +23,7 @@ const router = {
   printer: printerRouter,
   ai: aiRouter,
   jobs: jobsRouter,
+  queue: queueRouter,
 };
 
 export default router;

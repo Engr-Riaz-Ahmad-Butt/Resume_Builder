@@ -1,4 +1,4 @@
-/** TEMP (M05): Better Auth uses in-memory rate limits until M13 Redis. */
+/** Better Auth in-process limits; oRPC limits use Redis (M13). Auth secondaryStorage caches via Redis. */
 export const rateLimitConfig = {
   betterAuth: {
     global: {

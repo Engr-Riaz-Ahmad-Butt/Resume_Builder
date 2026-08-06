@@ -4,6 +4,7 @@ import { app } from "@/app";
 import { closeDb } from "@/integrations/drizzle/client";
 import { closeRedis } from "@/lib/redis";
 import { resetDb } from "@/test/reset-db";
+import { resetRedis } from "@/test/reset-redis";
 
 function uniqueUser() {
   const id = crypto.randomUUID().slice(0, 8);
@@ -18,6 +19,7 @@ function uniqueUser() {
 describe("Better Auth /api/auth integration", () => {
   beforeEach(async () => {
     await resetDb();
+    await resetRedis();
   });
 
   afterAll(async () => {

@@ -1,8 +1,9 @@
-/** TEMP (M05/M07): in-memory oRPC rate limits until M13 Redis. */
+/** oRPC rate limits backed by Redis (M13). */
 import { createRatelimitMiddleware } from "@orpc/experimental-ratelimit";
-import { MemoryRatelimiter } from "@orpc/experimental-ratelimit/memory";
+import { RedisRatelimiter } from "@orpc/experimental-ratelimit/redis";
 
 import { rateLimitConfig } from "@/integrations/rate-limit/config";
+import { getRedis } from "@/lib/redis";
 
 type ContextWithHeaders = {
   reqHeaders?: Headers;
@@ -24,7 +25,6 @@ function getTrustedIp(headers?: Headers): string | null {
     const raw = headers.get(headerName)?.trim();
     if (!raw) continue;
 
-    // Some proxies provide a comma-delimited chain; first item is the original client.
     const ip = raw.split(",")[0]?.trim();
     if (!ip) continue;
 
@@ -64,14 +64,27 @@ function getInputKeyPart(input: unknown): string {
   return "no-id";
 }
 
-const resumePasswordLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.resumePassword);
-const pdfLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.pdfExport);
-const aiLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.aiRequest);
-const jobsSearchLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.jobsSearch);
-const jobsTestConnectionLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.jobsTestConnection);
-const storageUploadLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageUpload);
-const storageDeleteLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageDelete);
-const resumeMutationLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.resumeMutations);
+function redisEval(script: string, numKeys: number, ...rest: string[]): Promise<unknown> {
+  return getRedis().eval(script, numKeys, ...rest);
+}
+
+function createLimiter(options: { maxRequests: number; window: number }) {
+  return new RedisRatelimiter({
+    eval: redisEval,
+    prefix: "orpc:ratelimit:",
+    maxRequests: options.maxRequests,
+    window: options.window,
+  });
+}
+
+const resumePasswordLimiter = createLimiter(rateLimitConfig.orpc.resumePassword);
+const pdfLimiter = createLimiter(rateLimitConfig.orpc.pdfExport);
+const aiLimiter = createLimiter(rateLimitConfig.orpc.aiRequest);
+const jobsSearchLimiter = createLimiter(rateLimitConfig.orpc.jobsSearch);
+const jobsTestConnectionLimiter = createLimiter(rateLimitConfig.orpc.jobsTestConnection);
+const storageUploadLimiter = createLimiter(rateLimitConfig.orpc.storageUpload);
+const storageDeleteLimiter = createLimiter(rateLimitConfig.orpc.storageDelete);
+const resumeMutationLimiter = createLimiter(rateLimitConfig.orpc.resumeMutations);
 
 export const resumePasswordRateLimit = createRatelimitMiddleware<
   ContextWithHeaders,

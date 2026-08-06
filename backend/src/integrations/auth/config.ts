@@ -18,6 +18,7 @@ import { createElement } from "react";
 
 import { rateLimitConfig } from "@/integrations/rate-limit/config";
 import { env } from "@/lib/env";
+import { getRedis } from "@/lib/redis";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import { generateId, toUsername } from "@/utils/string";
 import { isAllowedOAuthRedirectUri, parseAllowedHostList } from "@/utils/url-security";
@@ -258,6 +259,25 @@ const getAuthConfig = () => {
     secret: process.env.BETTER_AUTH_SECRET ?? env.AUTH_SECRET,
 
     database: drizzleAdapter(db, { schema, provider: "pg" }),
+
+    // M13: Redis-backed secondary storage (sessions cache / rate-limit counters when enabled by plugins)
+    secondaryStorage: {
+      get: async (key) => {
+        const value = await getRedis().get(key);
+        return value ?? null;
+      },
+      set: async (key, value, ttl) => {
+        if (ttl) await getRedis().set(key, value, "EX", ttl);
+        else await getRedis().set(key, value);
+      },
+      delete: async (key) => {
+        await getRedis().del(key);
+      },
+    },
+
+    session: {
+      storeSessionInDatabase: true,
+    },
 
     telemetry: { enabled: false },
     trustedOrigins: TRUSTED_ORIGINS,
