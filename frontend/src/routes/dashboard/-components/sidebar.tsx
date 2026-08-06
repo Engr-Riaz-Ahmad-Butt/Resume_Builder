@@ -7,10 +7,12 @@ import {
   BrainIcon,
   BriefcaseIcon,
   GearSixIcon,
+  IdentificationCardIcon,
   KeyIcon,
   ReadCvLogoIcon,
   ShieldCheckIcon,
   UserCircleIcon,
+  VideoCameraIcon,
   WarningIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
@@ -53,6 +55,16 @@ const appSidebarItems = [
     icon: <BriefcaseIcon />,
     label: msg`Job Search`,
     href: "/dashboard/job-search",
+  },
+  {
+    icon: <VideoCameraIcon />,
+    label: msg`Video Analysis`,
+    href: "/dashboard/video-analysis",
+  },
+  {
+    icon: <IdentificationCardIcon />,
+    label: msg`Portfolio`,
+    href: "/dashboard/portfolio",
   },
 ] as const satisfies SidebarItem[];
 

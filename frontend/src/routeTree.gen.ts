@@ -41,6 +41,7 @@ import { Route as ApiOpenapiSplatRouteImport } from "./routes/api/openapi.$";
 import { Route as ApiRpcSplatRouteImport } from "./routes/api/rpc.$";
 import { Route as BuilderResumeIdIndexRouteImport } from "./routes/builder/$resumeId/index";
 import { Route as DashboardJobSearchIndexRouteImport } from "./routes/dashboard/job-search/index";
+import { Route as DashboardPortfolioIndexRouteImport } from "./routes/dashboard/portfolio/index";
 import { Route as DashboardResumesIndexRouteImport } from "./routes/dashboard/resumes/index";
 import { Route as DashboardSettingsAiRouteImport } from "./routes/dashboard/settings/ai";
 import { Route as DashboardSettingsApiKeysRouteImport } from "./routes/dashboard/settings/api-keys";
@@ -49,6 +50,7 @@ import { Route as DashboardSettingsIntegrationsRouteRouteImport } from "./routes
 import { Route as DashboardSettingsJobSearchRouteImport } from "./routes/dashboard/settings/job-search";
 import { Route as DashboardSettingsPreferencesRouteImport } from "./routes/dashboard/settings/preferences";
 import { Route as DashboardSettingsProfileRouteImport } from "./routes/dashboard/settings/profile";
+import { Route as DashboardVideoAnalysisIndexRouteImport } from "./routes/dashboard/video-analysis/index";
 import { Route as UploadsUserIdSplatRouteImport } from "./routes/uploads/$userId.$";
 import { Route as DashboardSettingsAuthenticationIndexRouteImport } from "./routes/dashboard/settings/authentication/index";
 
@@ -217,6 +219,11 @@ const DashboardJobSearchIndexRoute = DashboardJobSearchIndexRouteImport.update({
   path: "/job-search/",
   getParentRoute: () => DashboardRouteRoute,
 } as any);
+const DashboardPortfolioIndexRoute = DashboardPortfolioIndexRouteImport.update({
+  id: "/portfolio/",
+  path: "/portfolio/",
+  getParentRoute: () => DashboardRouteRoute,
+} as any);
 const DashboardResumesIndexRoute = DashboardResumesIndexRouteImport.update({
   id: "/resumes/",
   path: "/resumes/",
@@ -261,6 +268,12 @@ const DashboardSettingsProfileRoute =
   DashboardSettingsProfileRouteImport.update({
     id: "/settings/profile",
     path: "/settings/profile",
+    getParentRoute: () => DashboardRouteRoute,
+  } as any);
+const DashboardVideoAnalysisIndexRoute =
+  DashboardVideoAnalysisIndexRouteImport.update({
+    id: "/video-analysis/",
+    path: "/video-analysis/",
     getParentRoute: () => DashboardRouteRoute,
   } as any);
 const UploadsUserIdSplatRoute = UploadsUserIdSplatRouteImport.update({
@@ -315,7 +328,9 @@ export interface FileRoutesByFullPath {
   "/uploads/$userId/$": typeof UploadsUserIdSplatRoute;
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search/": typeof DashboardJobSearchIndexRoute;
+  "/dashboard/portfolio/": typeof DashboardPortfolioIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/dashboard/video-analysis/": typeof DashboardVideoAnalysisIndexRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesByTo {
@@ -355,7 +370,9 @@ export interface FileRoutesByTo {
   "/uploads/$userId/$": typeof UploadsUserIdSplatRoute;
   "/builder/$resumeId": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search": typeof DashboardJobSearchIndexRoute;
+  "/dashboard/portfolio": typeof DashboardPortfolioIndexRoute;
   "/dashboard/resumes": typeof DashboardResumesIndexRoute;
+  "/dashboard/video-analysis": typeof DashboardVideoAnalysisIndexRoute;
   "/dashboard/settings/authentication": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRoutesById {
@@ -400,7 +417,9 @@ export interface FileRoutesById {
   "/uploads/$userId/$": typeof UploadsUserIdSplatRoute;
   "/builder/$resumeId/": typeof BuilderResumeIdIndexRoute;
   "/dashboard/job-search/": typeof DashboardJobSearchIndexRoute;
+  "/dashboard/portfolio/": typeof DashboardPortfolioIndexRoute;
   "/dashboard/resumes/": typeof DashboardResumesIndexRoute;
+  "/dashboard/video-analysis/": typeof DashboardVideoAnalysisIndexRoute;
   "/dashboard/settings/authentication/": typeof DashboardSettingsAuthenticationIndexRoute;
 }
 export interface FileRouteTypes {
@@ -445,7 +464,9 @@ export interface FileRouteTypes {
     | "/uploads/$userId/$"
     | "/builder/$resumeId/"
     | "/dashboard/job-search/"
+    | "/dashboard/portfolio/"
     | "/dashboard/resumes/"
+    | "/dashboard/video-analysis/"
     | "/dashboard/settings/authentication/";
   fileRoutesByTo: FileRoutesByTo;
   to:
@@ -485,7 +506,9 @@ export interface FileRouteTypes {
     | "/uploads/$userId/$"
     | "/builder/$resumeId"
     | "/dashboard/job-search"
+    | "/dashboard/portfolio"
     | "/dashboard/resumes"
+    | "/dashboard/video-analysis"
     | "/dashboard/settings/authentication";
   id:
     | "__root__"
@@ -529,7 +552,9 @@ export interface FileRouteTypes {
     | "/uploads/$userId/$"
     | "/builder/$resumeId/"
     | "/dashboard/job-search/"
+    | "/dashboard/portfolio/"
     | "/dashboard/resumes/"
+    | "/dashboard/video-analysis/"
     | "/dashboard/settings/authentication/";
   fileRoutesById: FileRoutesById;
 }
@@ -780,6 +805,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DashboardJobSearchIndexRouteImport;
       parentRoute: typeof DashboardRouteRoute;
     };
+    "/dashboard/portfolio/": {
+      id: "/dashboard/portfolio/";
+      path: "/portfolio";
+      fullPath: "/dashboard/portfolio/";
+      preLoaderRoute: typeof DashboardPortfolioIndexRouteImport;
+      parentRoute: typeof DashboardRouteRoute;
+    };
     "/dashboard/resumes/": {
       id: "/dashboard/resumes/";
       path: "/resumes";
@@ -834,6 +866,13 @@ declare module "@tanstack/react-router" {
       path: "/settings/profile";
       fullPath: "/dashboard/settings/profile";
       preLoaderRoute: typeof DashboardSettingsProfileRouteImport;
+      parentRoute: typeof DashboardRouteRoute;
+    };
+    "/dashboard/video-analysis/": {
+      id: "/dashboard/video-analysis/";
+      path: "/video-analysis";
+      fullPath: "/dashboard/video-analysis/";
+      preLoaderRoute: typeof DashboardVideoAnalysisIndexRouteImport;
       parentRoute: typeof DashboardRouteRoute;
     };
     "/uploads/$userId/$": {
@@ -903,7 +942,9 @@ interface DashboardRouteRouteChildren {
   DashboardSettingsPreferencesRoute: typeof DashboardSettingsPreferencesRoute;
   DashboardSettingsProfileRoute: typeof DashboardSettingsProfileRoute;
   DashboardJobSearchIndexRoute: typeof DashboardJobSearchIndexRoute;
+  DashboardPortfolioIndexRoute: typeof DashboardPortfolioIndexRoute;
   DashboardResumesIndexRoute: typeof DashboardResumesIndexRoute;
+  DashboardVideoAnalysisIndexRoute: typeof DashboardVideoAnalysisIndexRoute;
   DashboardSettingsAuthenticationIndexRoute: typeof DashboardSettingsAuthenticationIndexRoute;
 }
 
@@ -918,7 +959,9 @@ const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardSettingsPreferencesRoute: DashboardSettingsPreferencesRoute,
   DashboardSettingsProfileRoute: DashboardSettingsProfileRoute,
   DashboardJobSearchIndexRoute: DashboardJobSearchIndexRoute,
+  DashboardPortfolioIndexRoute: DashboardPortfolioIndexRoute,
   DashboardResumesIndexRoute: DashboardResumesIndexRoute,
+  DashboardVideoAnalysisIndexRoute: DashboardVideoAnalysisIndexRoute,
   DashboardSettingsAuthenticationIndexRoute:
     DashboardSettingsAuthenticationIndexRoute,
 };
