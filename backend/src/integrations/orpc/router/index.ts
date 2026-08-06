@@ -5,6 +5,7 @@ import { resumeRouter } from "./resume";
 import { printerRouter } from "./printer";
 import { storageRouter } from "./storage";
 import { queueRouter } from "./queue";
+import { videoRouter } from "./video";
 
 /**
  * AppRouter — domain routers accumulate across modules.
@@ -24,6 +25,7 @@ const router = {
   ai: aiRouter,
   jobs: jobsRouter,
   queue: queueRouter,
+  video: videoRouter,
 };
 
 export default router;

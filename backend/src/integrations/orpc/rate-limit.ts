@@ -142,3 +142,9 @@ export const resumeMutationRateLimit = createRatelimitMiddleware<ContextWithHead
   limiter: resumeMutationLimiter,
   key: ({ context }, input) => `resume-mutation:${getUserKey(context)}:${getInputKeyPart(input)}`,
 });
+
+/** Video uploads share the storage-upload budget (expensive Gemini multimodal). */
+export const videoUploadRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
+  limiter: storageUploadLimiter,
+  key: ({ context }) => `video-upload:${getUserKey(context)}`,
+});
