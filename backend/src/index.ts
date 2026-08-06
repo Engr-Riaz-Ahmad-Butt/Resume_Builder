@@ -1,3 +1,6 @@
+import { config as loadEnv } from "dotenv";
+loadEnv({ path: ".env" });
+
 import { serve } from "@hono/node-server";
 
 import { app } from "./app.js";

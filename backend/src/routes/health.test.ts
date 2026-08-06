@@ -1,10 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it } from "vitest";
 
-import { app } from "../app.js";
+import { closeDb } from "../integrations/drizzle/client.js";
+import { closeRedis } from "../lib/redis.js";
 import { REQUEST_ID_HEADER } from "../lib/request-id.js";
+import { app } from "../app.js";
 
 describe("GET /api/health", () => {
-  it("returns 200 with status ok", async () => {
+  afterAll(async () => {
+    await closeDb();
+    await closeRedis();
+  });
+
+  it("returns 200 with status ok when DB and Redis are up", async () => {
     const res = await app.request("/api/health");
 
     expect(res.status).toBe(200);
@@ -15,11 +22,14 @@ describe("GET /api/health", () => {
       status: string;
       service: string;
       requestId: string;
+      checks: { database: { status: string }; redis: { status: string } };
     };
 
     expect(body.status).toBe("ok");
     expect(body.service).toBe("reactive-resume-backend");
     expect(body.requestId).toBe(res.headers.get(REQUEST_ID_HEADER));
+    expect(body.checks.database.status).toBe("healthy");
+    expect(body.checks.redis.status).toBe("healthy");
   });
 
   it("propagates an incoming x-request-id", async () => {
