@@ -437,6 +437,46 @@ export const oauthConsent = pg.pgTable(
   (t) => [pg.index().on(t.userId, t.clientId)],
 );
 
+export const videoAnalysis = pg.pgTable(
+  "video_analysis",
+  {
+    id: pg
+      .uuid("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => generateId()),
+    userId: pg
+      .uuid("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    uploadStatus: pg.text("upload_status").notNull().default("pending"),
+    storagePath: pg.text("storage_path"),
+    mimeType: pg.text("mime_type"),
+    processedAt: pg.timestamp("processed_at", { withTimezone: true }),
+    errorMessage: pg.text("error_message"),
+    analysisResult: pg.text("analysis_result"),
+    professionalism: pg.text("professionalism"),
+    energyLevels: pg.text("energy_levels"),
+    communication: pg.text("communication"),
+    sociability: pg.text("sociability"),
+    overallScore: pg.doublePrecision("overall_score"),
+    videoScore: pg.doublePrecision("video_score"),
+    confidenceScore: pg.doublePrecision("confidence_score"),
+    clarityScore: pg.doublePrecision("clarity_score"),
+    communicationScore: pg.doublePrecision("communication_score"),
+    backgroundScore: pg.doublePrecision("background_score"),
+    needsImprovements: pg.jsonb("needs_improvements").$type<string[]>().default([]),
+    detailedAnalysis: pg.jsonb("detailed_analysis"),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: pg
+      .timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date()),
+  },
+  (t) => [pg.index().on(t.userId), pg.index().on(t.userId, t.createdAt.desc())],
+);
+
 export const queuePing = pg.pgTable("queue_ping", {
   id: pg
     .uuid("id")
@@ -458,6 +498,7 @@ export const relations = defineRelations(
     resume,
     resumeStatistics,
     resumeAnalysis,
+    videoAnalysis,
     apikey,
     jwks,
     oauthClient,
@@ -477,6 +518,7 @@ export const relations = defineRelations(
       oauthRefreshTokens: r.many.oauthRefreshToken(),
       oauthAccessTokens: r.many.oauthAccessToken(),
       oauthConsents: r.many.oauthConsent(),
+      videoAnalyses: r.many.videoAnalysis(),
     },
     session: {
       user: r.one.user({
@@ -534,6 +576,12 @@ export const relations = defineRelations(
       resume: r.one.resume({
         from: r.resumeAnalysis.resumeId,
         to: r.resume.id,
+      }),
+    },
+    videoAnalysis: {
+      user: r.one.user({
+        from: r.videoAnalysis.userId,
+        to: r.user.id,
       }),
     },
     apikey: {
