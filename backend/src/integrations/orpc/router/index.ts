@@ -1,3 +1,5 @@
+import { aiRouter } from "./ai";
+import { jobsRouter } from "./jobs";
 import { protectedProcedure, publicProcedure } from "../context";
 import { resumeRouter } from "./resume";
 import { printerRouter } from "./printer";
@@ -18,6 +20,8 @@ const router = {
   resume: resumeRouter,
   storage: storageRouter,
   printer: printerRouter,
+  ai: aiRouter,
+  jobs: jobsRouter,
 };
 
 export default router;

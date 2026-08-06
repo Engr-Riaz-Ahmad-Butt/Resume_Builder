@@ -20,6 +20,7 @@ export const env = createEnv({
     PRINTER_APP_URL: z.url({ protocol: /https?/ }).optional(),
     PRINTER_ENDPOINT: z.url({ protocol: /^(wss?|https?)$/ }),
     FLAG_DEBUG_PRINTER: z.stringbool().default(false),
+    AI_ALLOWED_BASE_URLS: z.string().optional(),
 
     BETTER_AUTH_API_KEY: z.string().min(1).optional(),
 
