@@ -1,0 +1,16 @@
+{
+  "name": "@reactive-resume/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reactive Resume standalone API (placeholder until M01 scaffold)",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "echo \"Backend scaffold lands in M01\" && exit 0",
+    "typecheck": "echo \"Backend scaffold lands in M01\" && exit 0",
+    "lint": "echo \"Backend scaffold lands in M01\" && exit 0",
+    "test": "echo \"Backend scaffold lands in M01\" && exit 0"
+  }
+}
