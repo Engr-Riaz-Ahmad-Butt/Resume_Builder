@@ -1,13 +1,10 @@
 import { defineRelations } from "drizzle-orm";
 import * as pg from "drizzle-orm/pg-core";
 
+import { type StoredResumeAnalysis } from "../../schema/resume/analysis.js";
+import { defaultResumeData, type ResumeData } from "../../schema/resume/data.js";
 import { generateId } from "../../lib/id.js";
 import { lower } from "./helpers.js";
-
-// FLAG(M02): ResumeData Zod schemas land in M03 — temporary stubs for drizzle typing.
-type ResumeData = Record<string, unknown>;
-type StoredResumeAnalysis = Record<string, unknown>;
-const defaultResumeData: ResumeData = {};
 
 export const user = pg.pgTable(
   "user",
