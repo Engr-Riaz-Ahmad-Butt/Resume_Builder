@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import type { RequestIdVariables } from "./middleware/request-id.js";
 import { requestIdMiddleware } from "./middleware/request-id.js";
 import { securityHeadersMiddleware } from "./middleware/security-headers.js";
+import { authRoutes } from "./routes/auth.js";
 import { healthRoutes } from "./routes/health.js";
 
 /**
@@ -13,6 +14,7 @@ export const app = new Hono<{ Variables: RequestIdVariables }>();
 app.use("*", requestIdMiddleware);
 app.use("*", securityHeadersMiddleware);
 app.route("/", healthRoutes);
+app.route("/api/auth", authRoutes);
 
 app.notFound((c) => c.json({ error: "Not Found" }, 404));
 
