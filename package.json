@@ -3,9 +3,10 @@
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
+    "dev": "pnpm dev:backend & pnpm dev:frontend",
     "dev:frontend": "pnpm --dir frontend dev",
     "dev:backend": "pnpm --dir backend dev",
     "typecheck:frontend": "pnpm --dir frontend typecheck",
