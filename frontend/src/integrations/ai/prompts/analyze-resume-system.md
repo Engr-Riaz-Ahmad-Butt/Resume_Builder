@@ -14,7 +14,7 @@ Evaluate the resume for:
 
 ## Strict Output Contract
 
-Return only a JSON object that matches this exact structure:
+Return only a JSON object that matches this structure:
 
 {
 "overallScore": 0-100 integer,
@@ -34,10 +34,18 @@ Return only a JSON object that matches this exact structure:
 "copyPrompt": "string"
 }
 ],
-"strengths": ["string"]
+"strengths": ["string"],
+"inferredRole": "string (optional)",
+"seniority": "string (optional)",
+"skillScores": [{"skill": "string", "score": 0-100, "evidence": "string"}] (optional, max 15),
+"majorTechTimeline": [{"technology": "string", "years": "string", "evidence": "string"}] (optional, max 15),
+"jobSpecificAnalysis": [{"category": "string", "strengths": ["string"], "areasForImprovement": ["string"], "suggestions": ["string"], "confidence": 0-100}] (optional),
+"missingKeywords": ["string"] (optional)
 }
 
-Do not include markdown, comments, or additional keys.
+Required keys: overallScore, scorecard, suggestions, strengths.
+Optional keys improve depth when evidence exists. Do not invent facts.
+Do not include markdown, comments, or unrelated keys.
 
 ## Evaluation Rules
 

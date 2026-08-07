@@ -14,11 +14,39 @@ export const analysisSuggestionSchema = z.object({
   copyPrompt: z.string().min(1),
 });
 
+
+export const skillScoreSchema = z.object({
+  skill: z.string().min(1),
+  score: z.number().int().min(0).max(100),
+  evidence: z.string().min(1),
+});
+
+export const techTimelineItemSchema = z.object({
+  technology: z.string().min(1),
+  years: z.string().min(1),
+  evidence: z.string().min(1),
+});
+
+export const jobSpecificAnalysisItemSchema = z.object({
+  category: z.string().min(1),
+  strengths: z.array(z.string()),
+  areasForImprovement: z.array(z.string()),
+  suggestions: z.array(z.string()),
+  confidence: z.number().int().min(0).max(100),
+});
+
 export const resumeAnalysisSchema = z.object({
   overallScore: z.number().int().min(0).max(100),
   scorecard: z.array(analysisDimensionSchema).min(1),
   suggestions: z.array(analysisSuggestionSchema).max(10),
   strengths: z.array(z.string().min(1)).max(10),
+  // Optional TalkingMe-inspired fields (additive; older analyses omit them)
+  inferredRole: z.string().min(1).optional(),
+  seniority: z.string().min(1).optional(),
+  skillScores: z.array(skillScoreSchema).max(30).optional(),
+  majorTechTimeline: z.array(techTimelineItemSchema).max(30).optional(),
+  jobSpecificAnalysis: z.array(jobSpecificAnalysisItemSchema).max(20).optional(),
+  missingKeywords: z.array(z.string().min(1)).max(30).optional(),
 });
 
 export const resumeAnalysisOutputSchema = z.object({
@@ -40,6 +68,26 @@ export const resumeAnalysisOutputSchema = z.object({
     }),
   ),
   strengths: z.array(z.string()),
+  inferredRole: z.string().optional(),
+  seniority: z.string().optional(),
+  skillScores: z
+    .array(z.object({ skill: z.string(), score: z.number(), evidence: z.string() }))
+    .optional(),
+  majorTechTimeline: z
+    .array(z.object({ technology: z.string(), years: z.string(), evidence: z.string() }))
+    .optional(),
+  jobSpecificAnalysis: z
+    .array(
+      z.object({
+        category: z.string(),
+        strengths: z.array(z.string()),
+        areasForImprovement: z.array(z.string()),
+        suggestions: z.array(z.string()),
+        confidence: z.number(),
+      }),
+    )
+    .optional(),
+  missingKeywords: z.array(z.string()).optional(),
 });
 
 export const storedResumeAnalysisSchema = resumeAnalysisSchema.extend({
