@@ -209,6 +209,132 @@ export function ResumeAnalysisSectionBuilder() {
                   </div>
                 )}
 
+                {(analysis.inferredRole || analysis.seniority) && (
+                  <div className="space-y-2 rounded-md border p-3 text-sm">
+                    {analysis.inferredRole && (
+                      <p>
+                        <span className="text-muted-foreground">
+                          <Trans>Inferred role</Trans>:{" "}
+                        </span>
+                        {analysis.inferredRole}
+                      </p>
+                    )}
+                    {analysis.seniority && (
+                      <p>
+                        <span className="text-muted-foreground">
+                          <Trans>Seniority</Trans>:{" "}
+                        </span>
+                        {analysis.seniority}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {analysis.skillScores && analysis.skillScores.length > 0 && (
+                  <div className="space-y-3 rounded-md border p-3">
+                    <h5 className="text-sm font-semibold">
+                      <Trans>Skill scores</Trans>
+                    </h5>
+                    <div className="space-y-3">
+                      {analysis.skillScores.map((item, index) => (
+                        <div key={`${item.skill}-${index}`} className="space-y-2 rounded-md border bg-card p-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="text-sm font-medium">{item.skill}</div>
+                            <Badge variant="secondary">{item.score}/100</Badge>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{item.evidence}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {analysis.majorTechTimeline && analysis.majorTechTimeline.length > 0 && (
+                  <div className="space-y-3 rounded-md border p-3">
+                    <h5 className="text-sm font-semibold">
+                      <Trans>Tech timeline</Trans>
+                    </h5>
+                    <ul className="space-y-2 text-sm">
+                      {analysis.majorTechTimeline.map((item, index) => (
+                        <li key={`${item.technology}-${index}`} className="rounded-md border bg-card p-3">
+                          <p className="font-medium">
+                            {item.technology}{" "}
+                            <span className="font-normal text-muted-foreground">({item.years})</span>
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">{item.evidence}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {analysis.jobSpecificAnalysis && analysis.jobSpecificAnalysis.length > 0 && (
+                  <div className="space-y-3 rounded-md border p-3">
+                    <h5 className="text-sm font-semibold">
+                      <Trans>Role-specific analysis</Trans>
+                    </h5>
+                    {analysis.jobSpecificAnalysis.map((item, index) => (
+                      <div key={`${item.category}-${index}`} className="space-y-2 rounded-md border bg-card p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-medium">{item.category}</p>
+                          <Badge variant="secondary">{item.confidence}%</Badge>
+                        </div>
+                        {item.strengths.length > 0 && (
+                          <div className="space-y-1">
+                            <p className="text-xs font-medium">
+                              <Trans>Strengths</Trans>
+                            </p>
+                            <ul className="list-outside list-disc pl-4 text-xs text-muted-foreground">
+                              {item.strengths.map((s, i) => (
+                                <li key={`${s}-${i}`}>{s}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {item.areasForImprovement.length > 0 && (
+                          <div className="space-y-1">
+                            <p className="text-xs font-medium">
+                              <Trans>Areas for improvement</Trans>
+                            </p>
+                            <ul className="list-outside list-disc pl-4 text-xs text-muted-foreground">
+                              {item.areasForImprovement.map((s, i) => (
+                                <li key={`${s}-${i}`}>{s}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {item.suggestions.length > 0 && (
+                          <div className="space-y-1">
+                            <p className="text-xs font-medium">
+                              <Trans>Suggestions</Trans>
+                            </p>
+                            <ul className="list-outside list-disc pl-4 text-xs text-muted-foreground">
+                              {item.suggestions.map((s, i) => (
+                                <li key={`${s}-${i}`}>{s}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {analysis.missingKeywords && analysis.missingKeywords.length > 0 && (
+                  <div className="space-y-3 rounded-md border p-3">
+                    <h5 className="text-sm font-semibold">
+                      <Trans>Missing keywords</Trans>
+                    </h5>
+                    <div className="flex flex-wrap gap-1.5">
+                      {analysis.missingKeywords.map((keyword) => (
+                        <Badge key={keyword} variant="secondary">
+                          {keyword}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {analysis.suggestions.length > 0 && (
                   <div className="space-y-4 rounded-md border p-3">
                     <h5 className="text-sm font-semibold">
