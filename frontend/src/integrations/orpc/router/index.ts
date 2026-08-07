@@ -2,6 +2,7 @@ import { aiRouter } from "./ai";
 import { authRouter } from "./auth";
 import { flagsRouter } from "./flags";
 import { jobsRouter } from "./jobs";
+import { portfolioRouter } from "./portfolio";
 import { printerRouter } from "./printer";
 import { resumeRouter } from "./resume";
 import { statisticsRouter } from "./statistics";
@@ -13,6 +14,7 @@ export default {
   auth: authRouter,
   flags: flagsRouter,
   jobs: jobsRouter,
+  portfolio: portfolioRouter,
   printer: printerRouter,
   resume: resumeRouter,
   statistics: statisticsRouter,
