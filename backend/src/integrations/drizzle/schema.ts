@@ -477,6 +477,36 @@ export const videoAnalysis = pg.pgTable(
   (t) => [pg.index().on(t.userId), pg.index().on(t.userId, t.createdAt.desc())],
 );
 
+export const portfolio = pg.pgTable(
+  "portfolio",
+  {
+    id: pg
+      .uuid("id")
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => generateId()),
+    name: pg.text("name").notNull(),
+    slug: pg.text("slug").notNull(),
+    isPublic: pg.boolean("is_public").notNull().default(false),
+    resumeId: pg.uuid("resume_id").references(() => resume.id, { onDelete: "set null" }),
+    userId: pg
+      .uuid("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: pg.timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: pg
+      .timestamp("updated_at", { withTimezone: true })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date()),
+  },
+  (t) => [
+    pg.unique().on(t.slug, t.userId),
+    pg.index().on(t.userId),
+    pg.index().on(t.isPublic, t.slug, t.userId),
+  ],
+);
+
 export const queuePing = pg.pgTable("queue_ping", {
   id: pg
     .uuid("id")
@@ -499,6 +529,7 @@ export const relations = defineRelations(
     resumeStatistics,
     resumeAnalysis,
     videoAnalysis,
+    portfolio,
     apikey,
     jwks,
     oauthClient,
@@ -519,6 +550,7 @@ export const relations = defineRelations(
       oauthAccessTokens: r.many.oauthAccessToken(),
       oauthConsents: r.many.oauthConsent(),
       videoAnalyses: r.many.videoAnalysis(),
+      portfolios: r.many.portfolio(),
     },
     session: {
       user: r.one.user({
@@ -582,6 +614,16 @@ export const relations = defineRelations(
       user: r.one.user({
         from: r.videoAnalysis.userId,
         to: r.user.id,
+      }),
+    },
+    portfolio: {
+      user: r.one.user({
+        from: r.portfolio.userId,
+        to: r.user.id,
+      }),
+      resume: r.one.resume({
+        from: r.portfolio.resumeId,
+        to: r.resume.id,
       }),
     },
     apikey: {
